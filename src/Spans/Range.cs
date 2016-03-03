@@ -56,7 +56,7 @@ namespace Spans
         /// <returns>A <see cref="Range&lt;T&gt;"/> object.</returns>
         public Range<T> Intersection(Range<T> range)
         {
-            return !Includes(range) ? !range.Includes(this) ? !Includes(range.Start) ? !Includes(range.End) ? null : new Range<T>(Start, range.End, IsStartIncluded, range.IsEndIncluded) : new Range<T>(range.Start, End, range.IsStartIncluded, IsEndIncluded) : this : range;
+            return !Includes(range) ? !range.Includes(this) ? !IncludesStart(range) ? !IncludesEnd(range) ? null : new Range<T>(Start, range.End, IsStartIncluded, range.IsEndIncluded) : new Range<T>(range.Start, End, range.IsStartIncluded, IsEndIncluded) : this : range;
         }
 
         /// <summary>
@@ -71,6 +71,17 @@ namespace Spans
             return (IsStartIncluded ? StartCompareTo(obj) <= 0 : StartCompareTo(obj) < 0) && (IsEndIncluded ? EndCompareTo(obj) >= 0 : EndCompareTo(obj) > 0);
         }
 
+        private bool IncludesStart(Range<T> range)
+        {
+            return ((IsStartIncluded || !range.IsStartIncluded) ? (StartCompareTo(range.Start) <= 0) : (StartCompareTo(range.Start) < 0)) &&
+                ((IsEndIncluded == range.IsStartIncluded) ? EndCompareTo(range.Start) >= 0 : EndCompareTo(range.Start) > 0);
+        }
+
+        private bool IncludesEnd(Range<T> range)
+        {
+            return ((IsStartIncluded == range.IsEndIncluded) ? (StartCompareTo(range.End) <= 0) : (StartCompareTo(range.End) < 0)) &&
+                ((IsEndIncluded || !range.IsEndIncluded) ? EndCompareTo(range.End) >= 0 : EndCompareTo(range.End) > 0);
+        }
 
         /// <summary>
         /// Determines whether the specified <see cref="Range&lt;T&gt;"/> object is contained within this range.
@@ -81,7 +92,7 @@ namespace Spans
         /// </returns>
         public bool Includes(Range<T> range)
         {
-            return Includes(range.Start) || !IsStartIncluded && StartEquals(range.Start) && Includes(range.End);
+            return IncludesStart(range) && IncludesEnd(range);
         }
 
         /// <summary>
@@ -93,7 +104,7 @@ namespace Spans
         /// </returns>
         public bool Overlaps(Range<T> range)
         {
-            return Includes(range.Start) || Includes(range.End) || range.Includes(this);
+            return IncludesStart(range) || IncludesEnd(range) || range.Includes(this);
         }
 
         /// <summary>
