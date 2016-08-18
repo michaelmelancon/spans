@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Spans.Test
 {
@@ -41,6 +37,16 @@ namespace Spans.Test
         }
 
         [Theory]
+        [InlineData(1, 5, true, true, 1)]
+        [InlineData(1, 5, true, true, 3)]
+        [InlineData(1, 5, false, false, 3)]
+        [InlineData(1, 5, true, true, 5)]
+        public void Includes(int sourceStart, int sourceEnd, bool sourceInclusiveStart, bool sourceInclusiveEnd, int target)
+        {
+            Assert.True(sourceStart.To(sourceEnd, sourceInclusiveStart, sourceInclusiveEnd).Includes(target));
+        }      
+
+        [Theory]
         [InlineData(1, 5, false, false, 1, 5, true, true)]
         [InlineData(1, 5, true, true, 1, 6, true, true)]
         [InlineData(1, 5, true, true, 0, 5, true, true)]
@@ -48,5 +54,15 @@ namespace Spans.Test
         {
             Assert.False(sourceStart.To(sourceEnd, sourceInclusiveStart, sourceInclusiveEnd).Includes(targetStart.To(targetEnd, targetInclusiveStart, targetInclusiveEnd)));
         }
+        
+        [Theory]
+        [InlineData(1, 5, false, false, 0)]
+        [InlineData(1, 5, false, false, 1)]
+        [InlineData(1, 5, false, false, 5)]
+        [InlineData(1, 5, false, false, 6)]
+        public void DoesNotInclude(int sourceStart, int sourceEnd, bool sourceInclusiveStart, bool sourceInclusiveEnd, int target)
+        {
+            Assert.False(sourceStart.To(sourceEnd, sourceInclusiveStart, sourceInclusiveEnd).Includes(target));
+        }  
     }
 }

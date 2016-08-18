@@ -4,7 +4,7 @@
   "authors": [ "Michael Melancon" ],
 
   "frameworks": {
-    "netstandard1.1": {
+    "netstandard1.0": {
       "dependencies": {
         "Microsoft.CSharp": "4.0.1",
         "System.Collections": "4.0.11",

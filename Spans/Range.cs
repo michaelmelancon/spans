@@ -2,6 +2,21 @@
 
 namespace Spans
 {
+    public static class Range
+    {
+        public static Range<T> Create<T>(T start, T end, bool inclusiveStart = true, bool inclusiveEnd = true)
+            where T : IComparable<T>, IEquatable<T>
+        {
+            return new Range<T>(start, end, inclusiveStart, inclusiveEnd);
+        }
+
+        public static Range<T> To<T>(this T start, T end, bool inclusiveStart = true, bool inclusiveEnd = true)
+            where T : IComparable<T>, IEquatable<T>
+        {
+            return Create(start, end, inclusiveStart, inclusiveEnd);
+        }
+    }
+
     /// <summary>
     /// Represents a range of values between a start and end limit that can be either inclusive or exclusive.
     /// </summary>
@@ -100,7 +115,7 @@ namespace Spans
         /// </summary>
         /// <param name="range">The range to check.</param>
         /// <returns>
-        ///     <c>true</c> if the the two ranges overlap; otherwise, <c>false</c>.
+        ///     <c>true</c> if the two ranges overlap; otherwise, <c>false</c>.
         /// </returns>
         public bool Overlaps(Range<T> range)
         {
@@ -130,7 +145,7 @@ namespace Spans
         }
 
         /// <summary>
-        /// Compares this <see cref="Range&lt;T&gt;"/> range object with the specified <see cref="Range&lt;T&gt;"/> object 
+        /// Compares this <see cref="Range&lt;T&gt;"/> range object with the specified <see cref="Range&lt;T&gt;"/> object
         /// and returns an integer that indicates their relationship to one another in the sort order.
         /// </summary>
         /// <param name="other">The object to compare to.</param>
@@ -145,7 +160,7 @@ namespace Spans
         /// </summary>
         /// <param name="other">The object to compare to.</param>
         /// <returns>
-        ///     <c>true</c> if the the the start and end values are equal; otherwise, <c>false</c>.
+        ///     <c>true</c> if the start and end values are equal; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(Range<T> other)
         {
@@ -168,7 +183,7 @@ namespace Spans
         /// Returns a hash code for this <see cref="Range&lt;T&gt;"/> instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this <see cref="Range&lt;T&gt;"/> instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this <see cref="Range&lt;T&gt;"/> instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode()
         {
@@ -253,21 +268,6 @@ namespace Spans
         private int EndCompareTo(T other)
         {
             return (End == null) ? 1 : End.CompareTo(other);
-        }
-    }
-
-    public static class Range
-    {
-        public static Range<T> Create<T>(T start, T end, bool inclusiveStart = true, bool inclusiveEnd = true)
-            where T : IComparable<T>, IEquatable<T>
-        {
-            return new Range<T>(start, end, inclusiveStart, inclusiveEnd);
-        }
-
-        public static Range<T> To<T>(this T start, T end, bool inclusiveStart = true, bool inclusiveEnd = true)
-            where T : IComparable<T>, IEquatable<T>
-        {
-            return Create(start, end, inclusiveStart, inclusiveEnd);
         }
     }
 }
