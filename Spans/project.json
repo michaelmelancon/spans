@@ -12,6 +12,7 @@
         "System.Runtime": "4.1.0",
         "System.Threading": "4.0.11"
       }
-    }
+    },
+    "net35": {}
   }
 }
