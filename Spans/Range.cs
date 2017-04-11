@@ -15,6 +15,12 @@ namespace Spans
         {
             return Create(start, end, inclusiveStart, inclusiveEnd);
         }
+
+        public static Range<T> From<T>(this T end, T start, bool inclusiveStart = true, bool inclusiveEnd = true)
+            where T : IComparable<T>, IEquatable<T>
+        {
+            return Create(start, end, inclusiveStart, inclusiveEnd);
+        }
     }
 
     /// <summary>
@@ -164,7 +170,7 @@ namespace Spans
         /// </returns>
         public bool Equals(Range<T> other)
         {
-            return other != null && StartEquals(other.Start) && EndEquals(other.End) && IsStartIncluded == other.IsStartIncluded && IsEndIncluded && other.IsEndIncluded;
+            return other != null && StartEquals(other.Start) && EndEquals(other.End) && IsStartIncluded == other.IsStartIncluded && IsEndIncluded == other.IsEndIncluded;
         }
 
         /// <summary>
@@ -187,7 +193,17 @@ namespace Spans
         /// </returns>
         public override int GetHashCode()
         {
-            return (Start == null) ? (End == null) ? 0 : End.GetHashCode() : Start.GetHashCode();
+            return CombineHashCodes(Start.GetHashCode(), End.GetHashCode(), IsStartIncluded.GetHashCode(), IsEndIncluded.GetHashCode());
+        }
+
+        private static int CombineHashCodes(int h1, int h2)
+        {
+            return (((h1 << 5) + h1) ^ h2);
+        }
+
+        private static int CombineHashCodes(int h1, int h2, int h3, int h4)
+        {
+            return CombineHashCodes(CombineHashCodes(h1, h2), CombineHashCodes(h3, h4));
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace Spans.Test
         public void IncludesValue(int sourceStart, int sourceEnd, bool sourceInclusiveStart, bool sourceInclusiveEnd, int target)
         {
             Assert.True(sourceStart.To(sourceEnd, sourceInclusiveStart, sourceInclusiveEnd).Includes(target));
-        }      
+        }
 
         [Theory]
         [InlineData(1, 5, false, false, 1, 5, true, true)]
@@ -54,7 +54,7 @@ namespace Spans.Test
         {
             Assert.False(sourceStart.To(sourceEnd, sourceInclusiveStart, sourceInclusiveEnd).Includes(targetStart.To(targetEnd, targetInclusiveStart, targetInclusiveEnd)));
         }
-        
+
         [Theory]
         [InlineData(1, 5, false, false, 0)]
         [InlineData(1, 5, false, false, 1)]
@@ -63,6 +63,117 @@ namespace Spans.Test
         public void DoesNotIncludeValue(int sourceStart, int sourceEnd, bool sourceInclusiveStart, bool sourceInclusiveEnd, int target)
         {
             Assert.False(sourceStart.To(sourceEnd, sourceInclusiveStart, sourceInclusiveEnd).Includes(target));
-        }  
+        }
+
+        [Fact]
+        public void ExcludeEndOfRangeWithInclusiveEndCreatesIdenticalRangeExceptWithExclusiveEnd()
+        {
+            Assert.Equal(0.To(5, inclusiveEnd: false), 0.To(5, inclusiveEnd: true).ExcludeEnd());
+        }
+
+        [Fact]
+        public void ExcludeEndOfRangeWithExclusiveEndReturnsItself()
+        {
+            var original = 0.To(5, inclusiveEnd: false);
+            Assert.Same(original, original.ExcludeEnd());
+        }
+
+        [Fact]
+        public void IncludeEndOfRangeWithExclusiveEndCreatesIdenticalRangeExceptWithInclusiveEnd()
+        {
+            Assert.Equal(0.To(5, inclusiveEnd: true), 0.To(5, inclusiveEnd: false).IncludeEnd());
+        }
+
+        [Fact]
+        public void IncludeEndOfRangeWithInclusiveEndReturnsItself()
+        {
+            var original = 0.To(5, inclusiveEnd: true);
+            Assert.Same(original, original.IncludeEnd());
+        }
+
+        [Fact]
+        public void ExcludeStartOfRangeWithInclusiveStartCreatesIdenticalRangeExceptWithExclusiveStart()
+        {
+            Assert.Equal(0.To(5, inclusiveStart: false), 0.To(5, inclusiveStart: true).ExcludeStart());
+        }
+
+        [Fact]
+        public void ExcludeStartOfRangeWithExclusiveStartReturnsItself()
+        {
+            var original = 0.To(5, inclusiveStart: false);
+            Assert.Same(original, original.ExcludeStart());
+        }
+
+        [Fact]
+        public void IncludeStartOfRangeWithExclusiveStartCreatesIdenticalRangeExceptWithInclusiveStart()
+        {
+            Assert.Equal(0.To(5, inclusiveStart: true), 0.To(5, inclusiveStart: false).IncludeStart());
+        }
+
+        [Fact]
+        public void IncludeStartOfRangeWithInclusiveStartReturnsItself()
+        {
+            var original = 0.To(5, inclusiveStart: true);
+            Assert.Same(original, original.IncludeStart());
+        }
+
+        [Theory]
+        [InlineData(0, 5, true, true)]
+        [InlineData(0, 5, true, false)]
+        [InlineData(0, 5, false, true)]
+        [InlineData(0, 5, false, false)]
+        public void ToMethodIsAConstructorAlias(int start, int end, bool inclusiveStart, bool inclusiveEnd)
+        {
+            Assert.Equal(new Range<int>(start, end, inclusiveStart, inclusiveEnd), start.To(end, inclusiveStart, inclusiveEnd));
+        }
+
+
+        [Theory]
+        [InlineData(0, 5, true, true)]
+        [InlineData(0, 5, true, false)]
+        [InlineData(0, 5, false, true)]
+        [InlineData(0, 5, false, false)]
+        public void FromMethodIsAConstructorAlias(int start, int end, bool inclusiveStart, bool inclusiveEnd)
+        {
+            Assert.Equal(new Range<int>(start, end, inclusiveStart, inclusiveEnd), end.From(start, inclusiveStart, inclusiveEnd));
+        }
+
+
+        [Theory]
+        [InlineData(0, 5, true, true)]
+        [InlineData(0, 5, true, false)]
+        [InlineData(0, 5, false, true)]
+        [InlineData(0, 5, false, false)]
+        public void CreateMethodIsAConstructorAlias(int start, int end, bool inclusiveStart, bool inclusiveEnd)
+        {
+            Assert.Equal(new Range<int>(start, end, inclusiveStart, inclusiveEnd), Range.Create(start, end, inclusiveStart, inclusiveEnd));
+        }
+
+
+        public void TheIntersectionOfARangeAndASuperRangeIsTheOriginalRange()
+        {
+            var original = 1.To(5);
+            Assert.Same(original, original.Intersection(0.To(6)));
+        }
+
+        public void TheIntersectionOfARangeAndASubRangeIsTheSubRange()
+        {
+            var subrange = 1.To(5);
+            Assert.Same(subrange, 0.To(6).Intersection(subrange));
+        }
+
+        [Theory]
+        [InlineData(1, 5, true, true, 0, 4, true, true, 1, 4, true, true)]
+        [InlineData(1, 5, false, false, 0, 4, false, false, 1, 4, false, false)]
+        [InlineData(1, 5, true, true, 2, 6, true, true, 2, 5, true, true)]
+        [InlineData(0, 5, true, false, 1, 5, true, true, 1, 5, true, false)]
+        [InlineData(1, 6, false, true, 1, 5, true, true, 1, 5, false, true)]
+        public void CreateIntersectionOfTwoRanges(int aStart, int aEnd, bool aInclusiveStart, bool aInclusiveEnd, int bStart, int bEnd, bool bInclusiveStart, bool bInclusiveEnd, int cStart, int cEnd, bool cInclusiveStart, bool cInclusiveEnd)
+        {
+            var expected = Range.Create(cStart, cEnd, cInclusiveStart, cInclusiveEnd);
+            var actual = Range.Create(aStart, aEnd, aInclusiveStart, aInclusiveEnd)
+                .Intersection(Range.Create(bStart, bEnd, bInclusiveStart, bInclusiveEnd));
+            Assert.Equal(expected, actual);
+        }
     }
 }
