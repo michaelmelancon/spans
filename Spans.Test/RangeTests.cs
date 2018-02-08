@@ -150,12 +150,14 @@ namespace Spans.Test
         }
 
 
+        [Fact]
         public void TheIntersectionOfARangeAndASuperRangeIsTheOriginalRange()
         {
             var original = 1.To(5);
             Assert.Same(original, original.Intersection(0.To(6)));
         }
 
+        [Fact]
         public void TheIntersectionOfARangeAndASubRangeIsTheSubRange()
         {
             var subrange = 1.To(5);

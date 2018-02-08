@@ -4,13 +4,8 @@
     <Description>a library for working with spans</Description>
     <Authors>Michael Melancon</Authors>
     <TargetFrameworks>netstandard1.0;net35</TargetFrameworks>
-    <AssemblyName>Spans</AssemblyName>
-    <PackageId>Spans</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <Reference Include="System" />
-  </ItemGroup>
 
 </Project>
