@@ -5,7 +5,8 @@
     <Authors>Michael Melancon</Authors>
     <TargetFrameworks>netstandard1.0;net35</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <IncludeDocumentationProjectOutputGroup>True</IncludeDocumentationProjectOutputGroup>
+    <DocumentationFile Condition="'$(Configuration)' == 'Release'">$(OutputPath)\Spans.xml</DocumentationFile>
   </PropertyGroup>
-
 
 </Project>
