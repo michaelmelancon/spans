@@ -1,22 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net452;netcoreapp1.0</TargetFrameworks>
+        <TargetFrameworks>net48;net8.0</TargetFrameworks>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="xunit" Version="2.9.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-        <PackageReference Include="xunit" Version="2.3.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Spans\Spans.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
     </ItemGroup>
 
 </Project>
